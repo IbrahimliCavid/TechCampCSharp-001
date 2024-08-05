@@ -1,4 +1,7 @@
-﻿namespace UserProject
+﻿using UserProject.Models;
+using UserProject.Services.Abstract;
+
+namespace UserProject
 {
     public class Program
     {
@@ -78,100 +81,4 @@
     }
 
 
-    public interface IUserOperation
-    {
-        void Add(User user);
-        void ShowAllUser();
-        void DeleteUserById(int id);
-        void UpdateUserEmail(int id, string email);
-    }
-
-    public class UserManager : IUserOperation
-    {
-        public void Add(User user)
-        {
-            DB.Instance.listUsers.Add(user);
-        }
-
-        public void DeleteUserById(int id)
-        {
-            var user = DB.Instance.listUsers.Find(x => x.Id == id);
-            if (user is null)
-            {
-                Console.WriteLine("Bu idli user yoxdur");
-            }
-            else
-            {
-                DB.Instance.listUsers.Remove(user);
-            }
-
-        }
-
-        public void ShowAllUser()
-        {
-            var list = DB.Instance.listUsers;
-            foreach (var item in list)
-            {
-                Console.WriteLine($"Id: {item.Id} \n" +
-                    $"Ad: {item.Name}\n" +
-                    $"Soyad: {item.Surname}\n" +
-                    $"Email: {item.Email}\n" +
-                    $"Password: {item.Password}");
-            }
-        }
-
-        public void UpdateUserEmail(int id, string email)
-        {
-            var user = DB.Instance.listUsers.Find(x => x.Id == id);
-            if (user is null)
-            {
-                Console.WriteLine("Bu idli istifadeci movcud deyil");
-            }
-            else
-            {
-                user.Email = email;
-                Console.WriteLine("Email ugurla update olundu");
-            }
-        }
-    }
-
-    public class User
-    {
-        public int Id { get; set; } 
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public string Email { get; set; }
-
-        public string Password { get; set; }
-    }
-
-    public class DB
-    {
-        private DB()
-        {
-            listUsers = new List<User>();
-        }
-
-        private static DB _instance;
-        public static DB Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new DB();
-                    return _instance;
-                }
-                else
-                {
-                    return _instance;
-                }
-                 
-               
-            }
-        }
-        public List<User> listUsers;
-
-        //public static List<User> userList= new();
-    }
 }
